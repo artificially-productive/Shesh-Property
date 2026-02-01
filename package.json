@@ -10,8 +10,11 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.0.0",
+    "@supabase/supabase-js": "^2.93.3",
     "eslint": "9.39.2",
     "eslint-config-next": "16.1.6",
+    "google-auth-library": "^10.5.0",
+    "google-spreadsheet": "^5.0.2",
     "next": "^16.1.6",
     "next-themes": "^0.2.1",
     "react": "18.2.0",

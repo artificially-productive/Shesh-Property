@@ -1,71 +1,74 @@
 import Link from 'next/link';
 import React from 'react';
 
-export default function About({
-  cardTitle1,
-  cardTitle2,
-  cardTitle3,
-  cardSubText1,
-  cardSubText2,
-  cardSubText3,
-}) {
+export default function About() {
   return (
-    <div id="about-container" className="relative p-4 mb-4">
-      <div className="flex justify-center items-center">
-        <button className="relative mt-24 bg-green-200  hover:bg-green-600 px-4 py-1 rounded-2xl text-green-500 hover:text-white h-8 w-28 font-black text-xs uppercase cursor-pointer ">
-          Our Story
-        </button>
-      </div>
-
-      <div className="relative ">
-        <div className="flex flex-col justify-center items-center mt-20">
-          <p
-            className="text-9xl sm:text-10xl text-blue-700 opacity-5 font-black text-center z-0 absolute top-0 left-0 w-full dark:text-white
-          "
-          >
-            OUR STORY
+    <div id="about" className="relative p-4 mb-4">
+      {/* Watermark Title with Learn More Link */}
+      <div className="relative mt-20">
+        <div className="relative h-[120px] sm:h-[180px] flex items-center justify-center">
+          <p className="text-8xl sm:text-[160px] text-blue-700 opacity-5 font-black text-center z-0 absolute inset-0 flex items-center justify-center uppercase dark:text-white">
+            About Us
           </p>
-          <p className="text-4xl text-blue-900 font-bold text-center z-20 relative mt-16 dark:text-gray-300">
-            We Will Find the Best Option
+          <p className="text-3xl sm:text-4xl text-blue-900 font-bold text-center z-20 relative capitalize dark:text-gray-300 px-4">
+            Who We Are
           </p>
         </div>
+        
+        {/* Learn More Link - positioned absolute top right */}
+        <Link 
+          href="/about" 
+          className="absolute top-4 right-4 sm:top-8 sm:right-8 text-orange-500 hover:text-orange-600 font-semibold flex items-center gap-2 z-30"
+        >
+          Learn more
+          <span>→</span>
+        </Link>
       </div>
 
-      <div className="relative justify-center items-center">
-        <p className="font-medium text-base text-center mt-20  text-bluePText">
-          Real estate is &quot;property consisting of land and the buildings on
-          it, along with its natural resources such as crops,
-          <br /> minerals or water, immovable property of this nature; an
-          interest vested in this (also) an item of real property,
-          <br /> (more generally) buildings or housing in general.
+          {/* Description */}
+      <div className="relative justify-center items-center px-4">
+        <p className="font-medium text-xl sm:text-2xl md:text-3xl text-center mt-10 text-bluePText leading-relaxed">
+          At Shesh Property, we don&apos;t just find homes—we handle everything
+          <br className="hidden sm:block" />
+          that comes with the move. Your trusted partner in Mumbai real estate.
         </p>
       </div>
 
-      <div className="flex flex-col sm:flex-row justify-center items-center mt-[50px] ml-[28px]">
-        <div className="bg-white  py-35 px-10 h-[160px] w-[350px] mr-[30px] flex flex-col justify-center items-center rounded-[10px] shadow-md mb-5 dark:bg-slate-700">
-          <p className="font-medium text-3xl leading-[50px] text-blueCardTitle capitalize dark:text-gray-100">
-            {cardTitle1}
-          </p>
-          <p className="text-sm leading-8 text-center text-blueCardSubTitle dark:text-white">
-            {cardSubText1}
-          </p>
+
+      {/* Simple Visual - 4 Step Icons */}
+      <div className="max-w-4xl mx-auto mt-12 px-4">
+        <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-8">
+          {[
+            { step: '01', label: 'Find' },
+            { step: '02', label: 'Finance' },
+            { step: '03', label: 'Paperwork' },
+            { step: '04', label: 'Move In' },
+          ].map((item, index) => (
+            <React.Fragment key={item.step}>
+              <div className="flex flex-col items-center">
+                <div className="w-14 h-14 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold">
+                  {item.step}
+                </div>
+                <p className="mt-2 text-sm font-medium text-gray-600 dark:text-gray-400">
+                  {item.label}
+                </p>
+              </div>
+              {index < 3 && (
+                <div className="hidden sm:block w-12 h-0.5 bg-orange-200 dark:bg-orange-900" />
+              )}
+            </React.Fragment>
+          ))}
         </div>
-        <div className="bg-white py-35 px-10 h-[160px] w-[350px] mr-[30px] flex flex-col justify-center items-center rounded-[10px] shadow-md mb-5 dark:bg-slate-700">
-          <p className="font-medium text-3xl leading-[50px] text-blueCardTitle capitalize dark:text-gray-100">
-            {cardTitle2}
-          </p>
-          <p className="text-sm leading-8 text-center text-blueCardSubTitle dark:text-white">
-            {cardSubText2}
-          </p>
-        </div>
-        <div className="bg-white py-35 px-10 h-[160px] w-[350px] mr-[30px] flex flex-col justify-center items-center rounded-[10px] shadow-md mb-5 dark:bg-slate-700">
-          <p className="font-medium text-3xl leading-[50px] text-blueCardTitle capitalize dark:text-gray-100">
-            {cardTitle3}
-          </p>
-          <p className="text-sm leading-8 text-center text-blueCardSubTitle dark:text-white">
-            {cardSubText3}
-          </p>
-        </div>
+      </div>
+
+      {/* CTA Button */}
+      <div className="flex justify-center mt-12">
+        <Link 
+          href="/about"
+          className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-10 py-4 rounded-3xl transition-all duration-300 text-lg"
+        >
+          See How We Help You
+        </Link>
       </div>
     </div>
   );

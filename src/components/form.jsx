@@ -1,26 +1,20 @@
-import Image from 'next/image';
 import React, { useState } from 'react';
-import usernameIcon from '../assets/icons/Icon.png';
-import callIcon from '../assets/icons/callIcon.png';
-import emailIcon from '../assets/icons/email.png';
-import messageIcon from '../assets/icons/message.png';
-
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const schema = yup.object().shape({
-  firstName: yup.string().required('First name is required'),
-  lastName: yup.string().required('Last name is required'),
+  name: yup.string().required('Name is required'),
+  intent: yup.string().required('Please select what you want'),
+  location: yup.string().required('Please select a location'),
+  budget: yup.string().required('Budget is required'),
   email: yup.string().email('Invalid email').required('Email is required'),
-  phoneNumber: yup
+  phone: yup
     .string()
-    .matches(/^[0-9]*$/, 'Invalid phone number, please enter numbers only')
+    .matches(/^[0-9]{10}$/, 'Please enter a valid 10-digit phone number')
     .required('Phone number is required'),
-  message: yup.string().required('Message is required'),
 });
 
 const Form = () => {
@@ -31,14 +25,29 @@ const Form = () => {
     reset,
   } = useForm({ resolver: yupResolver(schema) });
   const [submitting, setSubmitting] = useState(false);
+
   const onSubmit = async (data) => {
+    setSubmitting(true);
     try {
-      setSubmitting(true);
-      console.log(data);
-      toast.success('Form submitted successfully!');
-      reset();
+      console.log("Form Data Submitted:", data);
+
+      // Submit to Google Sheets via API route
+      const response = await fetch('/api/submit-lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        toast.success("Thank you! We'll get back to you within 24 hours.");
+        reset();
+      } else {
+        throw new Error('Failed to submit');
+      }
+
     } catch (error) {
-      console.error(error);
+      console.error("Submission Error:", error);
+      toast.error('Something went wrong. Please try again.');
     } finally {
       setSubmitting(false);
     }
@@ -46,170 +55,178 @@ const Form = () => {
 
   return (
     <div id="contact" className="relative p-4 mb-4">
-      <div className="flex justify-center items-center  p-3">
-        <button className="mt-[90px] mb-4 bg-orange-200 hover:bg-orange-600 px-4 py-1 rounded-2xl text-orange-500 hover:text-white h-8 w-28 font-black text-xs uppercase cursor-pointer ">
-          contacts
-        </button>
-      </div>
-      <div className="relative ">
-        <div className="flex flex-col justify-center items-center">
-          <p className=" text-8xl  sm:text-10xl text-blue-700 opacity-5 font-black text-center z-0 absolute top-0 left-0 w-full uppercase dark:text-white">
-            contacts
-          </p>
-          <p className="text-4xl text-blue-900 font-bold text-center z-20 relative capitalize mt-7 sm:mt-14 dark:text-gray-300">
-            get in touch now
-          </p>
-        </div>
-      </div>
-
-      <div className="relative justify-center items-center">
-        <p className="font-medium text-base text-center mt-20 mb-10 text-bluePText">
-          We have developed a unique space where you can work and create.
-          <br /> We thought of everything to the smallest detail.
-          <br />
-          You will be able to conduct your business, conduct meetings, meetings
+      {/* Watermark Title */}
+      <div className="relative h-[120px] sm:h-[180px] flex items-center justify-center mt-20">
+        <p className="text-8xl sm:text-[160px] text-blue-700 opacity-5 font-black text-center z-0 absolute inset-0 flex items-center justify-center uppercase dark:text-white">
+          Contact
+        </p>
+        <p className="text-3xl sm:text-4xl text-blue-900 font-bold text-center z-20 relative dark:text-gray-300 px-4">
+          Tell us what you&apos;re looking for
         </p>
       </div>
 
-      {/* FORM */}
+      {/* Description */}
+      <div className="relative justify-center items-center">
+        <p className="font-medium text-base text-center mt-10 mb-10 text-bluePText">
+          We usually respond within 24 hours.
+        </p>
+      </div>
 
-      <div className=" sm:flex justify-center items-center">
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="sm:flex flex-col justify-center items-center gap-[30px] p-0 w-[670px] h-full ">
-            {/* 1st row */}
-            <div className="sm:flex items-start p-0 gap-[30px] w-full h-[60px] relative">
-              <div className="flex flex-col">
-                <label className="relative">
-                  <input
-                    {...register('firstName')}
-                    name="firstName"
-                    placeholder="First Name"
-                    className="flex justify-between items-center rounded-xl py-[15px] px-[30px] shadow-md sm:w-[320px] h-[60px] capitalize mb-5 sm:mb-0 dark:bg-gray-600"
-                  />
-                  <Image
-                    src={usernameIcon}
-                    alt="username icon"
-                    className="w-5 h-5 absolute right-5 top-1/2 transform -translate-y-1/2"
-                  />
+      {/* Form */}
+      <div className="max-w-3xl mx-auto px-4">
+        <div className="bg-white dark:bg-slate-700 rounded-2xl shadow-xl p-8 sm:p-10">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            
+            {/* Row 1: Name */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Your Name
+              </label>
+              <input
+                {...register('name')}
+                type="text"
+                placeholder="Enter your full name"
+                className="w-full rounded-xl py-4 px-5 border border-gray-200 dark:border-gray-600 dark:bg-slate-600 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
+              />
+              {errors.name && (
+                <span className="text-red-500 text-sm mt-1 block">{errors.name.message}</span>
+              )}
+            </div>
+
+            {/* Row 2: Intent & Location */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  What do you want?
                 </label>
-                {errors.firstName && (
-                  <span className=" text-red-500 text-xs text-center mt-1">
-                    required
-                  </span>
+                <select
+                  {...register('intent')}
+                  className="w-full rounded-xl py-4 px-5 border border-gray-200 dark:border-gray-600 dark:bg-slate-600 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all appearance-none bg-white"
+                >
+                  <option value="">Select an option</option>
+                  <option value="buy">Buy a Property</option>
+                  <option value="sell">Sell a Property</option>
+                  <option value="rent">Rent a Property</option>
+                  <option value="valuation">Get Home Valuation</option>
+                  <option value="loan">Home Loan Assistance</option>
+                  <option value="interior">Interior Design</option>
+                </select>
+                {errors.intent && (
+                  <span className="text-red-500 text-sm mt-1 block">{errors.intent.message}</span>
                 )}
               </div>
 
-              <div className="flex flex-col">
-                <label className="relative">
-                  <input
-                    {...register('lastName')}
-                    name="lastName"
-                    placeholder="Last Name"
-                    className="flex justify-between items-center  rounded-xl py-[15px] px-[30px] shadow-md sm:w-[320px] h-[60px] capitalize mb-5 sm:mb-0 dark:bg-gray-600"
-                  />
-                  <Image
-                    src={usernameIcon}
-                    alt="username icon"
-                    className="w-5 h-5 absolute right-5 top-1/2 transform -translate-y-1/2"
-                  />
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Preferred Location
                 </label>
-                {errors.lastName && (
-                  <span className="text-red-500 text-xs mt-1 text-center">
-                    required
-                  </span>
+                <select
+                  {...register('location')}
+                  className="w-full rounded-xl py-4 px-5 border border-gray-200 dark:border-gray-600 dark:bg-slate-600 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all appearance-none bg-white"
+                >
+                  <option value="">Select a location</option>
+                  <option value="kandivali">Kandivali</option>
+                  <option value="borivali">Borivali</option>
+                  <option value="malad">Malad</option>
+                  <option value="andheri">Andheri</option>
+                  <option value="bandra">Bandra</option>
+                  <option value="worli">Worli</option>
+                  <option value="powai">Powai</option>
+                  <option value="thane">Thane</option>
+                  <option value="navi-mumbai">Navi Mumbai</option>
+                  <option value="other">Other</option>
+                </select>
+                {errors.location && (
+                  <span className="text-red-500 text-sm mt-1 block">{errors.location.message}</span>
                 )}
               </div>
             </div>
 
-            {/* 2nd row */}
-            <div className="sm:flex items-start p-0 gap-[30px] w-full h-[60px] relative mt-36 sm:mt-0">
-              <div className="flex flex-col">
-                <label className="relative ">
-                  <input
-                    {...register('email')}
-                    name="email"
-                    placeholder="Email Address"
-                    className="flex justify-between items-center  rounded-xl py-[15px] px-[30px] shadow-md sm:w-[320px] h-[60px] capitalize  mb-5  sm:mb-0 dark:bg-gray-600"
-                  />
-                  <Image
-                    src={emailIcon}
-                    alt="email icon"
-                    className="w-5 h-4 absolute right-5 top-1/2 transform -translate-y-1/2"
-                  />
+            {/* Row 3: Budget */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Your Budget (in ₹)
+              </label>
+              <select
+                {...register('budget')}
+                className="w-full rounded-xl py-4 px-5 border border-gray-200 dark:border-gray-600 dark:bg-slate-600 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all appearance-none bg-white"
+              >
+                <option value="">Select your budget</option>
+                <option value="under-50l">Under ₹50 Lac</option>
+                <option value="50l-1cr">₹50 Lac - ₹1 Cr</option>
+                <option value="1cr-2cr">₹1 Cr - ₹2 Cr</option>
+                <option value="2cr-5cr">₹2 Cr - ₹5 Cr</option>
+                <option value="above-5cr">Above ₹5 Cr</option>
+              </select>
+              {errors.budget && (
+                <span className="text-red-500 text-sm mt-1 block">{errors.budget.message}</span>
+              )}
+            </div>
+
+            {/* Row 4: Email & Phone */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Email Address
                 </label>
+                <input
+                  {...register('email')}
+                  type="email"
+                  placeholder="you@example.com"
+                  className="w-full rounded-xl py-4 px-5 border border-gray-200 dark:border-gray-600 dark:bg-slate-600 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
+                />
                 {errors.email && (
-                  <span className="text-red-500 text-xs text-center">
-                    required
-                  </span>
+                  <span className="text-red-500 text-sm mt-1 block">{errors.email.message}</span>
                 )}
               </div>
 
-              <div className="flex flex-col">
-                <label className="relative">
-                  <input
-                    {...register('phoneNumber')}
-                    name="phoneNumber"
-                    placeholder="Phone Number"
-                    className="flex justify-between items-center  rounded-xl py-[15px] px-[30px] shadow-md sm:w-[320px] h-[60px] mb-5  sm:mb-0 dark:bg-gray-600"
-                  />
-                  <Image
-                    src={callIcon}
-                    alt="phone icon"
-                    className="w-5 h-5 absolute right-5 top-1/2 transform -translate-y-1/2"
-                  />
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Phone Number
                 </label>
-                {errors.phoneNumber && (
-                  <span className="text-red-500 text-xs text-center">
-                    required
-                  </span>
+                <input
+                  {...register('phone')}
+                  type="tel"
+                  placeholder="10-digit mobile number"
+                  className="w-full rounded-xl py-4 px-5 border border-gray-200 dark:border-gray-600 dark:bg-slate-600 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
+                />
+                {errors.phone && (
+                  <span className="text-red-500 text-sm mt-1 block">{errors.phone.message}</span>
                 )}
               </div>
             </div>
 
-            {/* 3rd row  */}
-
-            <div className="sm:flex justify-between items-center p-0 gap-[10px] w-full h-[60px] relative mt-36 sm:mt-0">
-              <div className="flex flex-col">
-                <label className="relative">
-                  <input
-                    {...register('message')}
-                    name="message"
-                    placeholder="Your Message"
-                    className="flex justify-between items-center  rounded-xl py-[15px] px-[30px] shadow-md sm:w-[670px] h-[60px] overflow-ellipsis overflow-hidden dark:bg-gray-600"
-                  />
-                  <Image
-                    src={messageIcon}
-                    alt="message"
-                    className="w-5 h-5 absolute right-5 top-1/2 transform -translate-y-1/2"
-                  />
-                </label>
-                {errors.message && (
-                  <span className="text-red-500 text-xs text-center">
-                    required
-                  </span>
-                )}
-              </div>
+            {/* Submit Button */}
+            <div className="pt-4">
+              <button
+                type="submit"
+                disabled={submitting}
+                className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-orange-300 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 text-lg"
+              >
+                {submitting ? 'Sending...' : 'Submit Enquiry'}
+              </button>
             </div>
-            <button
-              type="submit"
-              className="flex justify-center items-center py-[15px] px-[35px] bg-[#3361FF] hover:bg-[#11266e] rounded-[30px] capitalize text-white mt-7 sm:mt-0"
-            >
-              send request
-            </button>
-            <ToastContainer
-              position="bottom-center"
-              autoClose={5000}
-              hideProgressBar={false}
-              newestOnTop={false}
-              closeOnClick
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              pauseOnHover
-              theme="dark"
-            />
-          </div>
-        </form>
+
+            {/* Privacy Note */}
+            <p className="text-center text-sm text-gray-500 dark:text-gray-400">
+              🔒 We never share your data with third parties.
+            </p>
+
+          </form>
+        </div>
+
+        <ToastContainer
+          position="bottom-center"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="dark"
+        />
       </div>
     </div>
   );

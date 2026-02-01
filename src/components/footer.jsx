@@ -1,118 +1,175 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import starIcon from "../assets/icons/starIcon.png";
-import rightArrowIcon from "../assets/icons/rightArrowIcon.png";
+import { RiTwitterFill, RiFacebookFill, RiInstagramLine, RiWhatsappFill } from "react-icons/ri";
 
 const Footer = () => {
   const year = new Date().getFullYear();
+  
   return (
-    <div className="relative p-4 mx-[10px] border-t-2 border-solid border-[#EDEFF2]">
-      {/* Row 1 */}
-      <div className="sm:flex justify-center items-center py-[20px] sm:py-[90px] px-2 ">
-        {/* text  */}
-        <p className="text-2xl text-center leading-[30px] font-bold text-[#4D5E80] capitalize mb-10 sm:mb-0 dark:text-white">
-          constructor
-        </p>
-        {/* menu  */}
-        <div className="relative flex gap-5 justify-center items-centers  sm:w-[450px] ">
-          <ul className="grid  sm:grid-cols-3 gap-5 text-center sm:gap-10 ">
-            <li>
-              <Link href="/" className="py-2 hover:text-orange-500">
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link href="/" className="py-2 hover:text-orange-500">
-                Gallery
-              </Link>
-            </li>
-            <li>
-              <Link href="/" className="py-2 hover:text-orange-500">
-                Services
-              </Link>
-            </li>
-            <li>
-              <Link href="/" className="py-2 hover:text-orange-500">
-                About
-              </Link>
-            </li>
-            <li>
-              <Link href="/" className="py-2 hover:text-orange-500">
-                Deals
-              </Link>
-            </li>
-            <li>
-              <Link href="/" className="py-2 hover:text-orange-500">
-                Contacts
-              </Link>
-            </li>
-          </ul>
-        </div>
-        {/* rating */}
-        <div className="flex flex-col items-center sm:items-start gap-1 mt-5 sm:mt-0">
-          <div className="flex">
-            <Image
-              src={starIcon}
-              alt="ratings "
-              className="w-[30px] h-[30px]"
-            />
-            <Image
-              src={starIcon}
-              alt="ratings "
-              className="w-[30px] h-[30px]"
-            />
-            <Image
-              src={starIcon}
-              alt="ratings "
-              className="w-[30px] h-[30px]"
-            />
-            <Image
-              src={starIcon}
-              alt="ratings "
-              className="w-[30px] h-[30px]"
-            />
-            <Image
-              src={starIcon}
-              alt="ratings "
-              className="w-[30px] h-[30px]"
-            />
+    <footer className="bg-blue-900 text-white">
+      <div className="max-w-7xl mx-auto px-4 py-16">
+        
+        {/* Main Footer Content - 4 Columns */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+          
+          {/* Column 1: Logo & Tagline */}
+          <div>
+            <h3 className="text-2xl font-bold mb-4">Shesh Properties</h3>
+            <br>
+            
+            
+
+
+
+            
+            </br>
+            {/* Social Links */}
+            <div className="flex gap-4 mt-6">
+              <a 
+                href="https://twitter.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="w-10 h-10 bg-white/10 hover:bg-orange-500 rounded-full flex items-center justify-center transition-colors duration-300"
+              >
+                <RiTwitterFill size={18} />
+              </a>
+              <a 
+                href="https://facebook.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="w-10 h-10 bg-white/10 hover:bg-orange-500 rounded-full flex items-center justify-center transition-colors duration-300"
+              >
+                <RiFacebookFill size={18} />
+              </a>
+              <a 
+                href="https://instagram.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="w-10 h-10 bg-white/10 hover:bg-orange-500 rounded-full flex items-center justify-center transition-colors duration-300"
+              >
+                <RiInstagramLine size={18} />
+              </a>
+              <a 
+                href="https://wa.me/919999999999" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="w-10 h-10 bg-white/10 hover:bg-green-500 rounded-full flex items-center justify-center transition-colors duration-300"
+              >
+                <RiWhatsappFill size={18} />
+              </a>
+            </div>
           </div>
-          <div className="flex justify-center items-center p-2">
-            <p>5.2M satisfied customers</p>
+
+          {/* Column 2: Contact Info */}
+          <div>
+            <h4 className="text-lg font-semibold mb-4">Contact Us</h4>
+            <div className="space-y-3 text-gray-300">
+              <p className="flex items-start gap-2">
+                <span>📍</span>
+                <span>Kandivali West, Mumbai, Maharashtra 400067</span>
+              </p>
+              <p className="flex items-center gap-2">
+                <span>📞</span>
+                <a href="tel:+919930662325" className="hover:text-orange-500 transition-colors">
+                  +91 99306 62325
+                </a>
+              </p>
+              <p className="flex items-center gap-2">
+                <span>✉️</span>
+                <a href="mailto:hello@sheshproperty.com" className="hover:text-orange-500 transition-colors">
+                  hello@sheshproperty.com
+                </a>
+              </p>
+            </div>
           </div>
+
+          {/* Column 3: Quick Links */}
+          <div>
+            <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
+            <ul className="space-y-3 text-gray-300">
+              <li>
+                <Link href="/" className="hover:text-orange-500 transition-colors">
+                  Home
+                </Link>
+              </li>
+              <li>
+                <Link href="#listings" className="hover:text-orange-500 transition-colors">
+                  Listings
+                </Link>
+              </li>
+              <li>
+                <Link href="#about" className="hover:text-orange-500 transition-colors">
+                  About Us
+                </Link>
+              </li>
+              <li>
+                <Link href="#services" className="hover:text-orange-500 transition-colors">
+                  Services
+                </Link>
+              </li>
+              <li>
+                <Link href="#contact" className="hover:text-orange-500 transition-colors">
+                  Contact
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 4: Services */}
+          <div>
+            <h4 className="text-lg font-semibold mb-4">Our Services</h4>
+            <ul className="space-y-3 text-gray-300">
+              <li>
+                <Link href="#services" className="hover:text-orange-500 transition-colors">
+                  Property Search
+                </Link>
+              </li>
+              <li>
+                <Link href="#services" className="hover:text-orange-500 transition-colors">
+                  Documentation
+                </Link>
+              </li>
+              <li>
+                <Link href="#services" className="hover:text-orange-500 transition-colors">
+                  Home Loans
+                </Link>
+              </li>
+              <li>
+                <Link href="#services" className="hover:text-orange-500 transition-colors">
+                  Interior Design
+                </Link>
+              </li>
+              <li>
+                <Link href="#services" className="hover:text-orange-500 transition-colors">
+                  Land Advisory
+                </Link>
+              </li>
+            </ul>
+          </div>
+
         </div>
       </div>
 
-      {/* Row 2 */}
-
-      <div className="relative py-0 px=[340px] border-t-2 border-solid border-[#EDEFF2] flex items-center justify-between gap-5">
-        <p className="capitalize text-[10px] sm:text-[13px] font-semibold leading-[25px] text-center text-bluePText dark:text-white">
-          © {year} Company. All Rights Reserved.
-        </p>
-        <Link
-          href="https://www.figma.com/community/file/1216698613875563555/Company-One"
-          target="_blank"
-          className="capitalize text-[10px] sm:text-[13px] font-semibold leading-[25px] text-center text-bluePText hover:text-orange-500 dark:text-white"
-        >
-          Design by Spline One
-        </Link>
-        <div className="flex items-start p-4 gap-[57px]">
-          <Link
-            href="#"
-            className="capitalize text-[10px] sm:text-[13px] font-semibold leading-[25px] text-center text-bluePText hover:text-orange-500 dark:text-white"
-          >
-            terms
-          </Link>
-          <Link
-            href="#"
-            className="capitalize text-[10px] sm:text-[13px] font-semibold leading-[25px] text-center text-bluePText  hover:text-orange-500 dark:text-white"
-          >
-            privacy
-          </Link>
+      {/* Bottom Bar */}
+      <div className="border-t border-white/10">
+        <div className="max-w-7xl mx-auto px-4 py-6">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-gray-400">
+            <p>
+              © {year} Shesh Properties. All Rights Reserved.
+            </p>
+            <div className="flex gap-6">
+              <Link href="/terms" className="hover:text-orange-500 transition-colors">
+                Terms & Conditions
+              </Link>
+              <Link href="/privacy" className="hover:text-orange-500 transition-colors">
+                Privacy Policy
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </footer>
   );
 };
 
