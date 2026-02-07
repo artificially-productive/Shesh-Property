@@ -1,16 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
+// REMOVED: Supabase import
+
 
 // Fallback images
 import userImg from '../assets/images/user1.png';
 import userImg1 from '../assets/images/user2.png';
 import userImg2 from '../assets/images/user3.png';
 
+
 const fallbackReviews = [
   {
     id: 1,
     text: "Shesh Property found us a 3 BHK in Kandivali within our budget in just 10 days. The documentation was handled so smoothly—we didn't have to visit any government office even once!",
-    name: "Priya Sharma",
+    name: "Priyesh Sharma",
     location: "Kandivali West, Mumbai",
     image: userImg,
     bgColor: "bg-[#8833FF4D]"
@@ -33,41 +36,14 @@ const fallbackReviews = [
   },
 ];
 
-// Helper to assign images and colors to reviews from Google Sheets
-const images = [userImg, userImg1, userImg2];
-const bgColors = ["bg-[#8833FF4D]", "bg-[#CC74294D]", "bg-[#E62E7B4D]"];
 
 const Review = () => {
-  const [reviews, setReviews] = useState(fallbackReviews);
+  // Directly use fallback reviews since Supabase is removed
+  const [reviews] = useState(fallbackReviews);
 
-  useEffect(() => {
-    async function fetchReviews() {
-      try {
-        const response = await fetch('/api/get-reviews');
-        if (response.ok) {
-          const data = await response.json();
-          if (data && data.length > 0) {
-            // Map Google Sheets data to component format
-            const mappedReviews = data.map((item, index) => ({
-              id: item.id || index + 1,
-              text: item.text,
-              name: item.name,
-              location: item.location,
-              image: images[index % 3],
-              bgColor: bgColors[index % 3],
-              rating: item.rating || 5,
-            }));
-            setReviews(mappedReviews);
-          }
-        }
-      } catch (error) {
-        console.error('Error fetching reviews:', error);
-        // Keep using fallback data
-      }
-    }
 
-    fetchReviews();
-  }, []);
+  // REMOVED: useEffect fetch logic
+
 
   return (
     <div id="reviews" className="relative p-4 mb-4">
@@ -81,6 +57,7 @@ const Review = () => {
         </p>
       </div>
 
+
       {/* Description */}
       <div className="relative justify-center items-center px-4">
         <p className="font-medium text-xl sm:text-2xl text-center mt-10 mb-16 text-bluePText leading-relaxed">
@@ -89,6 +66,7 @@ const Review = () => {
           Your trust is our biggest asset.
         </p>
       </div>
+
 
       {/* Review Cards */}
       <div className="flex flex-col lg:flex-row justify-center items-stretch gap-8 px-4 max-w-7xl mx-auto">
@@ -107,7 +85,7 @@ const Review = () => {
                 "{review.text}"
               </p>
             </div>
-            
+           
             {/* User Info */}
             <div className="flex items-center gap-4 mt-6 px-2">
               <Image
@@ -130,5 +108,6 @@ const Review = () => {
     </div>
   );
 };
+
 
 export default Review;

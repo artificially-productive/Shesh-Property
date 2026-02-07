@@ -1,4 +1,6 @@
 import Head from "next/head";
+import Link from "next/link";
+import { FiArrowLeft } from "react-icons/fi";
 import Footer from "@/components/footer";
 
 export default function Privacy() {
@@ -8,7 +10,19 @@ export default function Privacy() {
         <title>Privacy Policy | Shesh Property</title>
       </Head>
       
-      <main className="min-h-screen dark:bg-bgDark dark:text-gray-200 font-poppins pt-28 pb-20 px-6">
+      <main className="min-h-screen dark:bg-bgDark dark:text-gray-200 font-poppins pt-28 pb-20 px-6 relative">
+        
+        {/* Back Button */}
+        <div className="fixed top-6 left-6 z-50">
+          <Link 
+            href="/" 
+            className="flex items-center gap-2 px-4 py-2 bg-white/90 dark:bg-black/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-800"
+          >
+            <FiArrowLeft className="w-5 h-5 text-gray-800 dark:text-white" />
+            <span className="text-sm font-medium text-gray-800 dark:text-white">Back</span>
+          </Link>
+        </div>
+
         <div className="max-w-4xl mx-auto bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 sm:p-12 border border-gray-100 dark:border-gray-700">
           
           <h1 className="text-3xl sm:text-4xl font-bold text-blue-900 dark:text-white mb-2">Privacy Policy</h1>

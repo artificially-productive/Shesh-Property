@@ -1,30 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+// Dynamic Validation Schema
 const schema = yup.object().shape({
   name: yup.string().required('Name is required'),
   intent: yup.string().required('Please select what you want'),
   location: yup.string().required('Please select a location'),
-  budget: yup.string().required('Budget is required'),
   email: yup.string().email('Invalid email').required('Email is required'),
   phone: yup
     .string()
     .matches(/^[0-9]{10}$/, 'Please enter a valid 10-digit phone number')
     .required('Phone number is required'),
+  // Budget is only required for Buyers and Tenants
+  budget: yup.string().when('intent', {
+    is: (val) => val === 'buy' || val === 'rent_seek',
+    then: (schema) => schema.required('Please select a budget range'),
+    otherwise: (schema) => schema.notRequired(),
+  }),
 });
 
 const Form = () => {
   const {
     register,
     handleSubmit,
+    watch,
+    setValue,
     formState: { errors },
     reset,
   } = useForm({ resolver: yupResolver(schema) });
+  
   const [submitting, setSubmitting] = useState(false);
+
+  // Watch the 'intent' field to dynamically change options
+  const intent = watch('intent');
+
+  // Reset budget when intent changes to avoid invalid states
+  useEffect(() => {
+    setValue('budget', '');
+  }, [intent, setValue]);
 
   const onSubmit = async (data) => {
     setSubmitting(true);
@@ -52,6 +69,43 @@ const Form = () => {
       setSubmitting(false);
     }
   };
+
+  // --- Dynamic Options Helper ---
+  const renderBudgetOptions = () => {
+    if (intent === 'rent_seek') {
+      return (
+        <>
+          <option value="">Select Monthly Budget</option>
+          <option value="under-20k">Under ₹20,000</option>
+          <option value="20k-40k">₹20,000 - ₹40,000</option>
+          <option value="40k-70k">₹40,000 - ₹70,000</option>
+          <option value="70k-1L">₹70,000 - ₹1 Lakh</option>
+          <option value="above-1L">Above ₹1 Lakh</option>
+        </>
+      );
+    } 
+    // Default for Buy
+    return (
+      <>
+        <option value="">Select Property Budget</option>
+        <option value="under-75l">Under ₹75 Lac</option>
+        <option value="75l-1.5cr">₹75 Lac - ₹1.5 Cr</option>
+        <option value="1.5cr-3cr">₹1.5 Cr - ₹3 Cr</option>
+        <option value="3cr-5cr">₹3 Cr - ₹5 Cr</option>
+        <option value="above-5cr">Above ₹5 Cr</option>
+      </>
+    );
+  };
+
+  // Show budget only for Buyers and Tenants
+  const showBudget = intent === 'buy' || intent === 'rent_seek';
+
+  // Dynamic Label for Location
+  // Owners (Sell, Rent Out) -> "Property Location"
+  // Seekers (Buy, Rent Seek) -> "Preferred Location"
+  const locationLabel = (intent === 'sell' || intent === 'rent_out' || intent === 'valuation') 
+    ? "Property Location" 
+    : "Preferred Location";
 
   return (
     <div id="contact" className="relative p-4 mb-4">
@@ -106,7 +160,8 @@ const Form = () => {
                   <option value="">Select an option</option>
                   <option value="buy">Buy a Property</option>
                   <option value="sell">Sell a Property</option>
-                  <option value="rent">Rent a Property</option>
+                  <option value="rent_seek">Find a Rental (Tenant)</option>
+                  <option value="rent_out">List for Rent (Owner)</option>
                   <option value="valuation">Get Home Valuation</option>
                   <option value="loan">Home Loan Assistance</option>
                   <option value="interior">Interior Design</option>
@@ -118,20 +173,24 @@ const Form = () => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Preferred Location
+                  {locationLabel}
                 </label>
                 <select
                   {...register('location')}
                   className="w-full rounded-xl py-4 px-5 border border-gray-200 dark:border-gray-600 dark:bg-slate-600 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all appearance-none bg-white"
                 >
                   <option value="">Select a location</option>
-                  <option value="kandivali">Kandivali</option>
-                  <option value="borivali">Borivali</option>
-                  <option value="malad">Malad</option>
                   <option value="andheri">Andheri</option>
                   <option value="bandra">Bandra</option>
-                  <option value="worli">Worli</option>
+                  <option value="borivali">Borivali</option>
+                  <option value="dadar">Dadar</option>
+                  <option value="goregaon">Goregaon</option>
+                  <option value="juhu">Juhu</option>
+                  <option value="kandivali">Kandivali</option>
+                  <option value="malad">Malad</option>
                   <option value="powai">Powai</option>
+                  <option value="santacruz">Santacruz</option>
+                  <option value="worli">Worli</option>
                   <option value="thane">Thane</option>
                   <option value="navi-mumbai">Navi Mumbai</option>
                   <option value="other">Other</option>
@@ -142,26 +201,23 @@ const Form = () => {
               </div>
             </div>
 
-            {/* Row 3: Budget */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Your Budget (in ₹)
-              </label>
-              <select
-                {...register('budget')}
-                className="w-full rounded-xl py-4 px-5 border border-gray-200 dark:border-gray-600 dark:bg-slate-600 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all appearance-none bg-white"
-              >
-                <option value="">Select your budget</option>
-                <option value="under-50l">Under ₹50 Lac</option>
-                <option value="50l-1cr">₹50 Lac - ₹1 Cr</option>
-                <option value="1cr-2cr">₹1 Cr - ₹2 Cr</option>
-                <option value="2cr-5cr">₹2 Cr - ₹5 Cr</option>
-                <option value="above-5cr">Above ₹5 Cr</option>
-              </select>
-              {errors.budget && (
-                <span className="text-red-500 text-sm mt-1 block">{errors.budget.message}</span>
-              )}
-            </div>
+            {/* Row 3: Budget (Conditional) */}
+            {showBudget && (
+              <div className="transition-all duration-300 ease-in-out">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Your Budget
+                </label>
+                <select
+                  {...register('budget')}
+                  className="w-full rounded-xl py-4 px-5 border border-gray-200 dark:border-gray-600 dark:bg-slate-600 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all appearance-none bg-white"
+                >
+                  {renderBudgetOptions()}
+                </select>
+                {errors.budget && (
+                  <span className="text-red-500 text-sm mt-1 block">{errors.budget.message}</span>
+                )}
+              </div>
+            )}
 
             {/* Row 4: Email & Phone */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">

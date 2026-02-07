@@ -1,9 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
-import heroBg from '../assets/images/newgeneimages (3).png';
+import heroBg from '../assets/images/heroBackgroundflat.png';
 import { RiWhatsappFill } from 'react-icons/ri';
-
 
 const Hero = () => {
   const showMoreBtn = () => {
@@ -11,7 +10,6 @@ const Hero = () => {
       .getElementById('listings')
       .scrollIntoView({ behavior: 'smooth' });
   };
-
 
   return (
     <section className="flex flex-col w-full h-screen">
