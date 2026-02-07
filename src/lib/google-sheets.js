@@ -1,8 +1,13 @@
 import { GoogleSpreadsheet } from 'google-spreadsheet';
 import { JWT } from 'google-auth-library';
-import credentials from '../../google-credentials.json';
 
 const SHEET_ID = process.env.GOOGLE_SHEET_ID;
+
+const credentials = {
+  client_email: process.env.GOOGLE_CLIENT_EMAIL,
+  private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+};
+
 
 // Create auth client using the JSON file directly
 const serviceAccountAuth = new JWT({
