@@ -1,8 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Image from 'next/image';
-import { FiArrowLeft, FiMapPin, FiHome, FiMaximize, FiFilter } from 'react-icons/fi';
+import { 
+  FiArrowLeft, FiMapPin, FiHome, FiMaximize, FiFilter, 
+  FiX, FiChevronLeft, FiChevronRight, FiLayers, FiTruck,
+  FiShield, FiCalendar, FiGrid, FiMapPin as FiPin, FiExternalLink
+} from 'react-icons/fi';
+
 
 const fallbackListings = [
   {
@@ -14,7 +19,7 @@ const fallbackListings = [
     category: "flat",
     bedrooms: 3,
     area: "1,250 sq.ft",
-    image: "/images/listings/property1.jpg"
+    images: ["/images/listings/property1.jpg"],
   },
   {
     id: 2,
@@ -25,7 +30,7 @@ const fallbackListings = [
     category: "flat",
     bedrooms: 2,
     area: "950 sq.ft",
-    image: "/images/listings/property2.jpg"
+    images: ["/images/listings/property2.jpg"],
   },
   {
     id: 3,
@@ -36,7 +41,7 @@ const fallbackListings = [
     category: "house",
     bedrooms: 4,
     area: "3,500 sq.ft",
-    image: "/images/listings/property3.jpg"
+    images: ["/images/listings/property3.jpg"],
   },
   {
     id: 4,
@@ -47,7 +52,7 @@ const fallbackListings = [
     category: "commercial",
     bedrooms: null,
     area: "800 sq.ft",
-    image: "/images/listings/property4.jpg"
+    images: ["/images/listings/property4.jpg"],
   },
   {
     id: 5,
@@ -58,15 +63,17 @@ const fallbackListings = [
     category: "flat",
     bedrooms: 1,
     area: "550 sq.ft",
-    image: "/images/listings/property5.jpg"
+    images: ["/images/listings/property5.jpg"],
   },
 ];
+
 
 const filterTabs = [
   { id: 'all', label: 'All Properties' },
   { id: 'buy', label: 'Buy' },
   { id: 'rent', label: 'Rent' },
 ];
+
 
 const categoryFilters = [
   { id: 'all', label: 'All' },
@@ -76,12 +83,230 @@ const categoryFilters = [
   { id: 'commercial', label: 'Commercial' },
 ];
 
+
+/* ============ IMAGE CAROUSEL ============ */
+function ImageCarousel({ images, title }) {
+  const [current, setCurrent] = useState(0);
+  const fallbackImg = '/images/placeholder.png';
+  const slides = images && images.length > 0 ? images : [fallbackImg];
+
+  const prev = (e) => {
+    e.stopPropagation();
+    setCurrent((c) => (c === 0 ? slides.length - 1 : c - 1));
+  };
+
+  const next = (e) => {
+    e.stopPropagation();
+    setCurrent((c) => (c === slides.length - 1 ? 0 : c + 1));
+  };
+
+  return (
+    <div className="relative w-full h-full">
+      <Image
+        src={slides[current]}
+        alt={`${title} - image ${current + 1}`}
+        fill
+        className="object-cover"
+        onError={(e) => { e.currentTarget.src = fallbackImg; }}
+      />
+      
+      {slides.length > 1 && (
+        <>
+          <button onClick={prev} className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/50 hover:bg-black/70 text-white rounded-full flex items-center justify-center transition-colors">
+            <FiChevronLeft className="w-5 h-5" />
+          </button>
+          <button onClick={next} className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/50 hover:bg-black/70 text-white rounded-full flex items-center justify-center transition-colors">
+            <FiChevronRight className="w-5 h-5" />
+          </button>
+
+          {/* Dots */}
+          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
+            {slides.map((_, i) => (
+              <button
+                key={i}
+                onClick={(e) => { e.stopPropagation(); setCurrent(i); }}
+                className={`w-2 h-2 rounded-full transition-all ${
+                  i === current ? 'bg-white w-4' : 'bg-white/50'
+                }`}
+              />
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+
+/* ============ DETAIL ROW HELPER ============ */
+function DetailItem({ icon: Icon, label, value }) {
+  if (!value) return null;
+  return (
+    <div className="flex items-center gap-2 text-sm">
+      <Icon className="w-4 h-4 text-orange-500 flex-shrink-0" />
+      <span className="text-gray-500 dark:text-gray-400">{label}:</span>
+      <span className="text-gray-800 dark:text-white font-medium">{value}</span>
+    </div>
+  );
+}
+
+
+/* ============ EXPANDED MODAL ============ */
+function PropertyModal({ listing, onClose }) {
+  // Close on Escape key
+  useEffect(() => {
+    const handleEsc = (e) => { if (e.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', handleEsc);
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', handleEsc);
+      document.body.style.overflow = '';
+    };
+  }, [onClose]);
+
+  if (!listing) return null;
+
+  const amenitiesList = listing.amenities 
+    ? listing.amenities.split(',').map(a => a.trim()).filter(Boolean) 
+    : [];
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4" onClick={onClose}>
+      {/* Backdrop */}
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+      
+      {/* Modal */}
+      <div 
+        className="relative bg-white dark:bg-gray-900 rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Close button */}
+        <button 
+          onClick={onClose}
+          className="absolute top-4 right-4 z-10 w-9 h-9 bg-black/50 hover:bg-black/70 text-white rounded-full flex items-center justify-center transition-colors"
+        >
+          <FiX className="w-5 h-5" />
+        </button>
+
+        {/* Type badge */}
+        <div className="absolute top-4 left-4 z-10">
+          <span className={`px-3 py-1 rounded-full text-xs font-semibold uppercase ${
+            listing.type === 'buy' ? 'bg-green-500 text-white' : 'bg-blue-500 text-white'
+          }`}>
+            {listing.type === 'buy' ? 'For Sale' : 'For Rent'}
+          </span>
+        </div>
+
+        {/* Image Carousel */}
+        <div className="relative h-64 sm:h-80 bg-gray-200 dark:bg-gray-700 rounded-t-2xl overflow-hidden">
+          <ImageCarousel images={listing.images} title={listing.title} />
+        </div>
+
+        {/* Content */}
+        <div className="p-6">
+          {/* Title & Price */}
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-1">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{listing.title}</h2>
+            <p className="text-2xl font-bold text-orange-500 whitespace-nowrap">{listing.price}</p>
+          </div>
+
+          {/* Project & Builder */}
+          {(listing.projectName || listing.builder) && (
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">
+              {listing.projectName}{listing.projectName && listing.builder ? ' by ' : ''}{listing.builder}
+            </p>
+          )}
+
+          {/* Location */}
+          <div className="flex items-center gap-1 text-gray-500 dark:text-gray-400 text-sm mb-4">
+            <FiMapPin className="w-4 h-4" />
+            <span>{listing.location}</span>
+            {listing.mapLink && (
+              <a 
+                href={listing.mapLink} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="ml-2 text-orange-500 hover:text-orange-600 flex items-center gap-1"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <FiExternalLink className="w-3 h-3" /> Map
+              </a>
+            )}
+          </div>
+
+          {/* Description */}
+          {listing.description && (
+            <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-6">
+              {listing.description}
+            </p>
+          )}
+
+          {/* Key Details Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-3 mb-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl">
+            <DetailItem icon={FiHome} label="Bedrooms" value={listing.bedrooms ? `${listing.bedrooms} BHK` : null} />
+            <DetailItem icon={FiGrid} label="Bathrooms" value={listing.bathrooms} />
+            <DetailItem icon={FiMaximize} label="Area" value={listing.area} />
+            <DetailItem icon={FiLayers} label="Floor" value={listing.floor && listing.totalFloors ? `${listing.floor} of ${listing.totalFloors}` : listing.floor} />
+            <DetailItem icon={FiHome} label="Furnishing" value={listing.furnishing} />
+            <DetailItem icon={FiTruck} label="Parking" value={listing.parking} />
+            <DetailItem icon={FiCalendar} label="Possession" value={listing.possession} />
+            <DetailItem icon={FiCalendar} label="Age" value={listing.propertyAge} />
+            <DetailItem icon={FiPin} label="Maintenance" value={listing.maintenance} />
+          </div>
+
+          {/* RERA */}
+          {listing.reraId && (
+            <div className="flex items-center gap-2 text-sm mb-6 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
+              <FiShield className="w-4 h-4 text-green-600" />
+              <span className="text-green-700 dark:text-green-400 font-medium">RERA Registered:</span>
+              <span className="text-green-600 dark:text-green-300">{listing.reraId}</span>
+            </div>
+          )}
+
+          {/* Amenities */}
+          {amenitiesList.length > 0 && (
+            <div className="mb-6">
+              <p className="text-sm font-semibold text-gray-800 dark:text-white mb-2">Amenities</p>
+              <div className="flex flex-wrap gap-2">
+                {amenitiesList.map((amenity, i) => (
+                  <span key={i} className="px-3 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs font-medium rounded-full">
+                    {amenity}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Nearby Landmarks */}
+          {listing.nearbyLandmarks && (
+            <div className="mb-6">
+              <p className="text-sm font-semibold text-gray-800 dark:text-white mb-1">Nearby</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">{listing.nearbyLandmarks}</p>
+            </div>
+          )}
+
+          {/* CTA */}
+          <Link
+            href="/contact"
+            className="block w-full text-center bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 rounded-xl transition-colors text-lg"
+          >
+            Enquire About This Property
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+/* ============ MAIN PAGE ============ */
 export default function ListingsPage() {
   const router = useRouter();
   const [listings, setListings] = useState(fallbackListings);
   const [loading, setLoading] = useState(true);
   const [activeFilter, setActiveFilter] = useState('all');
   const [activeCategory, setActiveCategory] = useState('all');
+  const [selectedListing, setSelectedListing] = useState(null);
 
   useEffect(() => {
     async function fetchListings() {
@@ -99,7 +324,6 @@ export default function ListingsPage() {
         setLoading(false);
       }
     }
-
     fetchListings();
   }, []);
 
@@ -126,6 +350,15 @@ export default function ListingsPage() {
 
   return (
     <main className="min-h-screen bg-gray-50 dark:bg-black">
+      
+      {/* Modal */}
+      {selectedListing && (
+        <PropertyModal 
+          listing={selectedListing} 
+          onClose={() => setSelectedListing(null)} 
+        />
+      )}
+
       <div className="fixed top-6 left-6 z-50">
         <Link 
           href="/" 
@@ -202,19 +435,12 @@ export default function ListingsPage() {
                   {filteredListings.map((listing) => (
                     <div
                       key={listing.id}
-                      className="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group"
+                      onClick={() => setSelectedListing(listing)}
+                      className="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group cursor-pointer"
                     >
                       <div className="relative h-48 bg-gray-200 dark:bg-gray-700">
-                        <Image
-                          src={listing.image || '/images/listings/default-property.jpg'}
-                          alt={listing.title}
-                          fill
-                          className="object-cover group-hover:scale-105 transition-transform duration-300"
-                          onError={(e) => {
-                            e.currentTarget.style.display = 'none';
-                          }}
-                        />
-                        <div className="absolute top-3 left-3">
+                        <ImageCarousel images={listing.images} title={listing.title} />
+                        <div className="absolute top-3 left-3 z-[5]">
                           <span className={`px-3 py-1 rounded-full text-xs font-semibold uppercase ${
                             listing.type === 'buy' 
                               ? 'bg-green-500 text-white' 
@@ -252,12 +478,9 @@ export default function ListingsPage() {
                           <p className="text-xl font-bold text-orange-500">
                             {listing.price}
                           </p>
-                          <Link
-                            href="/contact"
-                            className="px-4 py-2 bg-blue-900 dark:bg-blue-700 text-white text-sm font-medium rounded-lg hover:bg-blue-800 transition-colors"
-                          >
-                            Enquire
-                          </Link>
+                          <span className="px-4 py-2 bg-blue-900 dark:bg-blue-700 text-white text-sm font-medium rounded-lg">
+                            View Details
+                          </span>
                         </div>
                       </div>
                     </div>

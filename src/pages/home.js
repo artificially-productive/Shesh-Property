@@ -45,15 +45,16 @@ const HomePage = () => {
       <Form />
       <Footer />
       {showButton && (
-        <div className="fixed bottom-24 right-10 z-50">
-          <button
-            onClick={handleScrollToTop}
-            className="bg-slate-100 rounded shadow-xl overflow-visible"
-          >
-            <Image src={scrollIcon} alt="scroll button" />
-          </button>
-        </div>
-      )}
+  <div className="fixed bottom-20 right-4 sm:bottom-24 sm:right-10 z-40">
+    <button
+      onClick={handleScrollToTop}
+      className="bg-slate-100 rounded-full shadow-xl overflow-visible w-10 h-10 sm:w-auto sm:h-auto flex items-center justify-center"
+    >
+      <Image src={scrollIcon} alt="scroll button" width={40} height={40} />
+    </button>
+  </div>
+)}
+
     </div>
   );
 };

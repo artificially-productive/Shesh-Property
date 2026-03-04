@@ -5,7 +5,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-// Dynamic Validation Schema
 const schema = yup.object().shape({
   name: yup.string().required('Name is required'),
   intent: yup.string().required('Please select what you want'),
@@ -15,7 +14,6 @@ const schema = yup.object().shape({
     .string()
     .matches(/^[0-9]{10}$/, 'Please enter a valid 10-digit phone number')
     .required('Phone number is required'),
-  // Budget is only required for Buyers and Tenants
   budget: yup.string().when('intent', {
     is: (val) => val === 'buy' || val === 'rent_seek',
     then: (schema) => schema.required('Please select a budget range'),
@@ -34,11 +32,8 @@ const Form = () => {
   } = useForm({ resolver: yupResolver(schema) });
   
   const [submitting, setSubmitting] = useState(false);
-
-  // Watch the 'intent' field to dynamically change options
   const intent = watch('intent');
 
-  // Reset budget when intent changes to avoid invalid states
   useEffect(() => {
     setValue('budget', '');
   }, [intent, setValue]);
@@ -46,9 +41,6 @@ const Form = () => {
   const onSubmit = async (data) => {
     setSubmitting(true);
     try {
-      console.log("Form Data Submitted:", data);
-
-      // Submit to Google Sheets via API route
       const response = await fetch('/api/submit-lead', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -61,7 +53,6 @@ const Form = () => {
       } else {
         throw new Error('Failed to submit');
       }
-
     } catch (error) {
       console.error("Submission Error:", error);
       toast.error('Something went wrong. Please try again.');
@@ -70,7 +61,6 @@ const Form = () => {
     }
   };
 
-  // --- Dynamic Options Helper ---
   const renderBudgetOptions = () => {
     if (intent === 'rent_seek') {
       return (
@@ -83,8 +73,7 @@ const Form = () => {
           <option value="above-1L">Above ₹1 Lakh</option>
         </>
       );
-    } 
-    // Default for Buy
+    }
     return (
       <>
         <option value="">Select Property Budget</option>
@@ -97,65 +86,61 @@ const Form = () => {
     );
   };
 
-  // Show budget only for Buyers and Tenants
   const showBudget = intent === 'buy' || intent === 'rent_seek';
 
-  // Dynamic Label for Location
-  // Owners (Sell, Rent Out) -> "Property Location"
-  // Seekers (Buy, Rent Seek) -> "Preferred Location"
   const locationLabel = (intent === 'sell' || intent === 'rent_out' || intent === 'valuation') 
     ? "Property Location" 
     : "Preferred Location";
 
   return (
-    <div id="contact" className="relative p-4 mb-4">
+    <div id="contact" className="relative px-4 mb-4 overflow-hidden">
       {/* Watermark Title */}
-      <div className="relative h-[120px] sm:h-[180px] flex items-center justify-center mt-20">
-        <p className="text-8xl sm:text-[160px] text-blue-700 opacity-5 font-black text-center z-0 absolute inset-0 flex items-center justify-center uppercase dark:text-white">
+      <div className="relative h-[80px] sm:h-[180px] flex items-center justify-center mt-12 sm:mt-20">
+        <p className="text-5xl sm:text-[160px] text-blue-700 opacity-5 font-black text-center z-0 absolute inset-0 flex items-center justify-center uppercase dark:text-white">
           Contact
         </p>
-        <p className="text-3xl sm:text-4xl text-blue-900 font-bold text-center z-20 relative dark:text-gray-300 px-4">
+        <p className="text-xl sm:text-4xl text-blue-900 font-bold text-center z-20 relative dark:text-gray-300 px-4">
           Tell us what you&apos;re looking for
         </p>
       </div>
 
       {/* Description */}
       <div className="relative justify-center items-center">
-        <p className="font-medium text-base text-center mt-10 mb-10 text-bluePText">
+        <p className="font-medium text-sm sm:text-base text-center mt-6 sm:mt-10 mb-6 sm:mb-10 text-bluePText">
           We usually respond within 24 hours.
         </p>
       </div>
 
       {/* Form */}
-      <div className="max-w-3xl mx-auto px-4">
-        <div className="bg-white dark:bg-slate-700 rounded-2xl shadow-xl p-8 sm:p-10">
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <div className="max-w-3xl mx-auto px-0 sm:px-4">
+        <div className="bg-white dark:bg-slate-700 rounded-2xl shadow-xl p-5 sm:p-10">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 sm:space-y-6">
             
-            {/* Row 1: Name */}
+            {/* Name */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 sm:mb-2">
                 Your Name
               </label>
               <input
                 {...register('name')}
                 type="text"
                 placeholder="Enter your full name"
-                className="w-full rounded-xl py-4 px-5 border border-gray-200 dark:border-gray-600 dark:bg-slate-600 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
+                className="w-full rounded-xl py-3 sm:py-4 px-4 sm:px-5 border border-gray-200 dark:border-gray-600 dark:bg-slate-600 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all text-sm sm:text-base"
               />
               {errors.name && (
-                <span className="text-red-500 text-sm mt-1 block">{errors.name.message}</span>
+                <span className="text-red-500 text-xs sm:text-sm mt-1 block">{errors.name.message}</span>
               )}
             </div>
 
-            {/* Row 2: Intent & Location */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {/* Intent & Location */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 sm:mb-2">
                   What do you want?
                 </label>
                 <select
                   {...register('intent')}
-                  className="w-full rounded-xl py-4 px-5 border border-gray-200 dark:border-gray-600 dark:bg-slate-600 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all appearance-none bg-white"
+                  className="w-full rounded-xl py-3 sm:py-4 px-4 sm:px-5 border border-gray-200 dark:border-gray-600 dark:bg-slate-600 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all appearance-none bg-white text-sm sm:text-base"
                 >
                   <option value="">Select an option</option>
                   <option value="buy">Buy a Property</option>
@@ -167,17 +152,17 @@ const Form = () => {
                   <option value="interior">Interior Design</option>
                 </select>
                 {errors.intent && (
-                  <span className="text-red-500 text-sm mt-1 block">{errors.intent.message}</span>
+                  <span className="text-red-500 text-xs sm:text-sm mt-1 block">{errors.intent.message}</span>
                 )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 sm:mb-2">
                   {locationLabel}
                 </label>
                 <select
                   {...register('location')}
-                  className="w-full rounded-xl py-4 px-5 border border-gray-200 dark:border-gray-600 dark:bg-slate-600 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all appearance-none bg-white"
+                  className="w-full rounded-xl py-3 sm:py-4 px-4 sm:px-5 border border-gray-200 dark:border-gray-600 dark:bg-slate-600 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all appearance-none bg-white text-sm sm:text-base"
                 >
                   <option value="">Select a location</option>
                   <option value="andheri">Andheri</option>
@@ -196,78 +181,76 @@ const Form = () => {
                   <option value="other">Other</option>
                 </select>
                 {errors.location && (
-                  <span className="text-red-500 text-sm mt-1 block">{errors.location.message}</span>
+                  <span className="text-red-500 text-xs sm:text-sm mt-1 block">{errors.location.message}</span>
                 )}
               </div>
             </div>
 
-            {/* Row 3: Budget (Conditional) */}
+            {/* Budget (Conditional) */}
             {showBudget && (
               <div className="transition-all duration-300 ease-in-out">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 sm:mb-2">
                   Your Budget
                 </label>
                 <select
                   {...register('budget')}
-                  className="w-full rounded-xl py-4 px-5 border border-gray-200 dark:border-gray-600 dark:bg-slate-600 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all appearance-none bg-white"
+                  className="w-full rounded-xl py-3 sm:py-4 px-4 sm:px-5 border border-gray-200 dark:border-gray-600 dark:bg-slate-600 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all appearance-none bg-white text-sm sm:text-base"
                 >
                   {renderBudgetOptions()}
                 </select>
                 {errors.budget && (
-                  <span className="text-red-500 text-sm mt-1 block">{errors.budget.message}</span>
+                  <span className="text-red-500 text-xs sm:text-sm mt-1 block">{errors.budget.message}</span>
                 )}
               </div>
             )}
 
-            {/* Row 4: Email & Phone */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {/* Email & Phone */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 sm:mb-2">
                   Email Address
                 </label>
                 <input
                   {...register('email')}
                   type="email"
                   placeholder="you@example.com"
-                  className="w-full rounded-xl py-4 px-5 border border-gray-200 dark:border-gray-600 dark:bg-slate-600 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
+                  className="w-full rounded-xl py-3 sm:py-4 px-4 sm:px-5 border border-gray-200 dark:border-gray-600 dark:bg-slate-600 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all text-sm sm:text-base"
                 />
                 {errors.email && (
-                  <span className="text-red-500 text-sm mt-1 block">{errors.email.message}</span>
+                  <span className="text-red-500 text-xs sm:text-sm mt-1 block">{errors.email.message}</span>
                 )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 sm:mb-2">
                   Phone Number
                 </label>
                 <input
                   {...register('phone')}
                   type="tel"
                   placeholder="10-digit mobile number"
-                  className="w-full rounded-xl py-4 px-5 border border-gray-200 dark:border-gray-600 dark:bg-slate-600 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
+                  className="w-full rounded-xl py-3 sm:py-4 px-4 sm:px-5 border border-gray-200 dark:border-gray-600 dark:bg-slate-600 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all text-sm sm:text-base"
                 />
                 {errors.phone && (
-                  <span className="text-red-500 text-sm mt-1 block">{errors.phone.message}</span>
+                  <span className="text-red-500 text-xs sm:text-sm mt-1 block">{errors.phone.message}</span>
                 )}
               </div>
             </div>
 
-            {/* Submit Button */}
-            <div className="pt-4">
+            {/* Submit */}
+            <div className="pt-2 sm:pt-4">
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-orange-300 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 text-lg"
+                className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-orange-300 text-white font-semibold py-3 sm:py-4 px-8 rounded-xl transition-all duration-300 text-base sm:text-lg"
               >
                 {submitting ? 'Sending...' : 'Submit Enquiry'}
               </button>
             </div>
 
-            {/* Privacy Note */}
-            <p className="text-center text-sm text-gray-500 dark:text-gray-400">
+            <p className="text-center text-xs sm:text-sm text-gray-500 dark:text-gray-400">
               🔒 We never share your data with third parties.
             </p>
-
           </form>
         </div>
 

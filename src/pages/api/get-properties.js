@@ -10,6 +10,9 @@ export default async function handler(req, res) {
     return res.status(200).json(properties);
   } catch (error) {
     console.error('API Error:', error);
-    return res.status(500).json({ message: 'Failed to fetch properties' });
+    return res.status(500).json({ 
+      message: 'Failed to fetch properties',
+      error: error.message   // 👈 only this line added
+    });
   }
 }

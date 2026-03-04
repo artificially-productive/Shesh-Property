@@ -29,10 +29,10 @@ async function getDoc() {
 export async function getProperties() {
   try {
     const document = await getDoc();
-    const sheet = document.sheetsByTitle['Properties'];
+    const sheet = document.sheetsByTitle['Properties']; // tab name must be exactly "Properties"
     const rows = await sheet.getRows();
     
-    return rows.map(row => ({
+    return rows.map((row) => ({
       id: row.get('id'),
       title: row.get('title'),
       location: row.get('location'),
@@ -40,13 +40,34 @@ export async function getProperties() {
       type: row.get('type'),
       category: row.get('category'),
       bedrooms: row.get('bedrooms'),
+      bathrooms: row.get('bathrooms'),
       area: row.get('area'),
-      image: row.get('image'),
+      floor: row.get('floor'),
+      totalFloors: row.get('totalFloors'),
+      furnishing: row.get('furnishing'),
+      parking: row.get('parking'),
+      possession: row.get('possession'),
+      reraId: row.get('reraId'),
+      projectName: row.get('projectName'),
+      builder: row.get('builder'),
+      propertyAge: row.get('propertyAge'),
+      maintenance: row.get('maintenance'),
+      amenities: row.get('amenities'),
+      nearbyLandmarks: row.get('nearbyLandmarks'),
+      mapLink: row.get('mapLink'),
+      description: row.get('description'),
+      images: [
+        row.get('image 1'),
+        row.get('image 2'),
+        row.get('image 3'),
+        row.get('image 4'),
+        row.get('image 5'),
+      ].filter(Boolean),
       status: row.get('status'),
     }));
   } catch (error) {
     console.error('Error fetching properties:', error);
-    return [];
+    throw error ; // instead of return [];
   }
 }
 
