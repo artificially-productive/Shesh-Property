@@ -334,10 +334,11 @@ export default function ListingsPage() {
   }, [router.query.type]);
 
   const filteredListings = listings.filter((listing) => {
-    const typeMatch = activeFilter === 'all' || listing.type === activeFilter;
-    const categoryMatch = activeCategory === 'all' || listing.category === activeCategory;
-    return typeMatch && categoryMatch;
-  });
+  const typeMatch = activeFilter === 'all' || listing.type?.toLowerCase() === activeFilter;
+  const categoryMatch = activeCategory === 'all' || listing.category?.toLowerCase() === activeCategory;
+  return typeMatch && categoryMatch;
+});
+
 
   const handleFilterChange = (filterId) => {
     setActiveFilter(filterId);
