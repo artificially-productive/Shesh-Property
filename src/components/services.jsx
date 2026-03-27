@@ -3,52 +3,15 @@ import React from 'react';
 import Link from 'next/link';
 
 import cardImageBg1 from '../assets/images/RightPropertyservicecomponent.png';
-import cardImageBg2 from '../assets/images/Paperworkservicecomponent.png';
-import cardImageBg3 from '../assets/images/Homeloansservicescomponent.png';
 
-const services = [
-  {
-    id: 1,
-    title: "Property Discovery",
-    description: "We understand your requirements and help you find the right property — covering budget, location, site visits, market insights, and access to both developer and resale options.",
-    includes: [
-      "Requirement consultation",
-      "Curated property options",
-      "Site visit coordination",
-      "Market insights & price comparison",
-    ],
-    image: cardImageBg1,
-    cta: "Find Properties",
-    href: "/listings"
-  },
-  {
-    id: 2,
-    title: "Documentation & Legal Verification",
-    description: "We verify all property documents to ensure the deal is legally safe — title checks, ownership history, encumbrance certificates, and MahaRERA registration.",
-    includes: [
-      "Title & ownership verification",
-      "Encumbrance certificate check",
-      "MahaRERA registration check",
-      "Approval & layout verification",
-    ],
-    image: cardImageBg2,
-    cta: "Learn More",
-    href: "/services"
-  },
-  {
-    id: 3,
-    title: "Home Loan & Financial Assistance",
-    description: "We simplify financing by checking your loan eligibility, comparing offers across banks, and supporting the entire application process end to end.",
-    includes: [
-      "Loan eligibility check",
-      "Comparison across banks",
-      "Application support",
-      "Pre-approval coordination",
-    ],
-    image: cardImageBg3,
-    cta: "Get Loan Help",
-    href: "/contact"
-  },
+const steps = [
+  { step: '01', label: 'Find' },
+  { step: '02', label: 'Verify' },
+  { step: '03', label: 'Finance' },
+  { step: '04', label: 'Negotiate' },
+  { step: '05', label: 'Paperwork' },
+  { step: '06', label: 'Move In' },
+  { step: '07', label: 'Beyond' },
 ];
 
 const Services = () => {
@@ -81,58 +44,46 @@ const Services = () => {
         </p>
       </div>
 
-      {/* Service Cards */}
-      <div className="max-w-7xl mx-auto px-0 sm:px-4 space-y-6 sm:space-y-8">
-        {services.map((service, index) => (
-          <div
-            key={service.id}
-            className={`flex flex-col ${
-              index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'
-            } bg-white dark:bg-slate-700 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300`}
-          >
-            {/* Image */}
-            <div className="lg:w-1/2 h-48 sm:h-64 lg:h-auto relative">
-              <Image
-                src={service.image}
-                alt={service.title}
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent lg:hidden"></div>
-            </div>
-
-            {/* Content */}
-            <div className="lg:w-1/2 p-5 sm:p-8 lg:p-12 flex flex-col justify-center">
-              <h3 className="text-xl sm:text-3xl font-bold text-blue-900 dark:text-white mb-3 sm:mb-4">
-                {service.title}
-              </h3>
-              <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base leading-relaxed mb-4">
-                {service.description}
-              </p>
-              {/* Includes bullets */}
-              <ul className="mb-5 sm:mb-6 space-y-1">
-                {service.includes.map((item, i) => (
-                  <li key={i} className="flex items-center gap-2 text-xs sm:text-sm text-gray-500 dark:text-gray-400">
-                    <span className="w-1.5 h-1.5 rounded-full bg-orange-500 flex-shrink-0"></span>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-              <Link
-                href={service.href}
-                className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold px-5 sm:px-6 py-2.5 sm:py-3 rounded-lg w-fit transition-all duration-300 text-sm sm:text-base"
-              >
-                {service.cta}
-                <span>→</span>
-              </Link>
-            </div>
+      {/* Image from About section */}
+      <div className="max-w-7xl mx-auto px-0 sm:px-4 mb-10 sm:mb-14 rounded-2xl overflow-hidden shadow-lg">
+        <div className="relative w-full h-48 sm:h-72 lg:h-96">
+          <Image
+            src={cardImageBg1}
+            alt="Full-service real estate solutions"
+            fill
+            className="object-cover"
+            sizes="100vw"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+          <div className="absolute bottom-4 sm:bottom-8 left-4 sm:left-8">
+            <p className="text-white text-lg sm:text-2xl font-bold drop-shadow">End-to-end support, every step of the way.</p>
           </div>
-        ))}
+        </div>
+      </div>
+
+      {/* 7 Step Horizontal Indicators */}
+      <div className="max-w-5xl mx-auto px-2 sm:px-4">
+        <div className="flex flex-row justify-center items-center gap-1 sm:gap-3">
+          {steps.map((item, index) => (
+            <React.Fragment key={item.step}>
+              <div className="flex flex-col items-center">
+                <div className="w-9 h-9 sm:w-14 sm:h-14 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold text-[10px] sm:text-base">
+                  {item.step}
+                </div>
+                <p className="mt-2 text-[10px] sm:text-sm font-medium text-blue-900 dark:text-gray-300 text-center">
+                  {item.label}
+                </p>
+              </div>
+              {index < steps.length - 1 && (
+                <div className="w-4 sm:w-10 h-0.5 bg-orange-400 dark:bg-orange-700 mb-5 flex-shrink-0" />
+              )}
+            </React.Fragment>
+          ))}
+        </div>
       </div>
 
       {/* See All Services CTA */}
-      <div className="flex justify-center mt-8 sm:mt-12">
+      <div className="flex justify-center mt-10 sm:mt-14">
         <Link
           href="/services"
           className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 sm:px-10 py-3 sm:py-4 rounded-3xl transition-all duration-300 text-base sm:text-lg"

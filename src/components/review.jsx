@@ -1,9 +1,4 @@
 import React, { useState } from 'react';
-import Image from 'next/image';
-
-import userImg from '../assets/images/user1.png';
-import userImg1 from '../assets/images/user2.png';
-import userImg2 from '../assets/images/user3.png';
 
 const fallbackReviews = [
   {
@@ -11,24 +6,18 @@ const fallbackReviews = [
     text: "Shesh Property found us a 3 BHK in Kandivali within our budget in just 10 days. The documentation was handled so smoothly—we didn't have to visit any government office even once!",
     name: "Priyesh Sharma",
     location: "Kandivali West, Mumbai",
-    image: userImg,
-    bgColor: "bg-[#8833FF4D]"
   },
   {
     id: 2,
     text: "We were struggling to get a home loan approved. Shesh Property connected us with their banking partners and we got 0.25% lower interest than what HDFC offered directly.",
     name: "Rajesh Mehta",
     location: "Andheri West, Mumbai",
-    image: userImg1,
-    bgColor: "bg-[#CC74294D]"
   },
   {
     id: 3,
     text: "Bought a flat in Bandra through Shesh Property. From property search to registration to interior design—they handled everything. Like having a personal real estate concierge!",
     name: "Sneha Desai",
     location: "Bandra West, Mumbai",
-    image: userImg2,
-    bgColor: "bg-[#E62E7B4D]"
   },
 ];
 
@@ -70,13 +59,8 @@ const Review = () => {
                 &ldquo;{review.text}&rdquo;
               </p>
             </div>
-           
+
             <div className="flex items-center gap-3 sm:gap-4 mt-4 sm:mt-6 px-2">
-              <Image
-                src={review.image}
-                alt={review.name}
-                className={`w-[45px] h-[45px] sm:w-[55px] sm:h-[55px] ${review.bgColor} rounded-full object-cover`}
-              />
               <div>
                 <p className="font-bold text-sm sm:text-base text-blue-900 dark:text-white">
                   {review.name}

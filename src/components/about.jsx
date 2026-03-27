@@ -14,9 +14,9 @@ export default function About() {
             Who We Are
           </p>
         </div>
-        
-        <Link 
-          href="/about" 
+
+        <Link
+          href="/about"
           className="absolute top-2 right-2 sm:top-8 sm:right-8 text-sm sm:text-base text-orange-500 hover:text-orange-600 font-semibold flex items-center gap-1 sm:gap-2 z-30"
         >
           Learn more
@@ -33,39 +33,13 @@ export default function About() {
         </p>
       </div>
 
-      {/* Simple Visual - 4 Step Icons */}
-      <div className="max-w-4xl mx-auto mt-8 sm:mt-12 px-4">
-        <div className="flex flex-row justify-center items-center gap-3 sm:gap-8">
-          {[
-            { step: '01', label: 'Find' },
-            { step: '02', label: 'Finance' },
-            { step: '03', label: 'Paperwork' },
-            { step: '04', label: 'Move In' },
-          ].map((item, index) => (
-            <React.Fragment key={item.step}>
-              <div className="flex flex-col items-center">
-                <div className="w-10 h-10 sm:w-14 sm:h-14 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold text-xs sm:text-base">
-                  {item.step}
-                </div>
-                <p className="mt-2 text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400">
-                  {item.label}
-                </p>
-              </div>
-              {index < 3 && (
-                <div className="w-6 sm:w-12 h-0.5 bg-orange-200 dark:bg-orange-900" />
-              )}
-            </React.Fragment>
-          ))}
-        </div>
-      </div>
-
       {/* CTA Button */}
       <div className="flex justify-center mt-8 sm:mt-12">
-        <Link 
+        <Link
           href="/about"
           className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 sm:px-10 py-3 sm:py-4 rounded-3xl transition-all duration-300 text-base sm:text-lg"
         >
-          See How We Help You
+          Our Story
         </Link>
       </div>
     </div>

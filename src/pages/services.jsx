@@ -19,8 +19,7 @@ const services = [
       "Access to developer and resale properties",
     ],
     image: cardImageBg1,
-    cta: "Browse Listings",
-    href: "/listings"
+    // --- REMOVED: cta & href ---
   },
   {
     id: 2,
@@ -33,8 +32,7 @@ const services = [
       "Price benchmarking",
     ],
     image: cardImageBg2,
-    cta: "Talk to Us",
-    href: "/contact"
+    // --- REMOVED: cta & href ---
   },
   {
     id: 3,
@@ -48,8 +46,7 @@ const services = [
       "Project registration verification with MahaRERA",
     ],
     image: cardImageBg3,
-    cta: "Get Legal Help",
-    href: "/contact"
+    // --- REMOVED: cta & href ---
   },
   {
     id: 4,
@@ -62,8 +59,7 @@ const services = [
       "Booking assistance",
     ],
     image: cardImageBg1,
-    cta: "Start Negotiating",
-    href: "/contact"
+    // --- REMOVED: cta & href ---
   },
   {
     id: 5,
@@ -77,8 +73,7 @@ const services = [
       "Pre-approval coordination",
     ],
     image: cardImageBg3,
-    cta: "Get Loan Help",
-    href: "/contact"
+    // --- REMOVED: cta & href ---
   },
   {
     id: 6,
@@ -92,8 +87,7 @@ const services = [
       "Transaction support until completion",
     ],
     image: cardImageBg2,
-    cta: "Learn More",
-    href: "/contact"
+    // --- REMOVED: cta & href ---
   },
   {
     id: 7,
@@ -107,8 +101,7 @@ const services = [
       "Property management and resale support",
     ],
     image: cardImageBg1,
-    cta: "Talk to Us",
-    href: "/contact"
+    // --- REMOVED: cta & href ---
   },
 ];
 
@@ -195,13 +188,7 @@ export default function ServicesPage() {
                   </ul>
                 </div>
 
-                <Link
-                  href={service.href}
-                  className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition-colors duration-300 text-sm sm:text-base"
-                >
-                  {service.cta}
-                  <span>→</span>
-                </Link>
+                {/* --- REMOVED THE BUTTON --- */}
               </div>
             </div>
           ))}

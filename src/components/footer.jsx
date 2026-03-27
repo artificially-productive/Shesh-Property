@@ -6,14 +6,19 @@ const Footer = () => {
   const year = new Date().getFullYear();
   
   return (
-    <footer className="bg-blue-900 text-white">
+    // --- CHANGED: bg-blue-900 to bg-black ---
+    <footer className="bg-black text-white">
       <div className="max-w-7xl mx-auto px-4 py-10 sm:py-16">
         
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10">
           
           {/* Column 1: Logo & Social */}
           <div className="col-span-2 sm:col-span-1">
-            <h3 className="text-xl sm:text-2xl font-bold mb-4">Shesh Properties</h3>
+            <img 
+              src="/logo/shesh-logo.webp" 
+              alt="Shesh Properties Logo" 
+              className="h-10 sm:h-12 w-auto mb-4"
+            />
             <p className="text-gray-300 text-sm mb-4">Your trusted partner in Mumbai real estate.</p>
             <div className="flex gap-3">
               <a 

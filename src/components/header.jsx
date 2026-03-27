@@ -21,6 +21,7 @@ const Header = () => {
           </h1>
         </Link>
 
+
         {/* Desktop Navigation */}
         <ul className="hidden sm:flex text-sm font-bold items-center">
           <li className="p-4 hover:text-orange-500 cursor-pointer">
