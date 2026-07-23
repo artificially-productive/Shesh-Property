@@ -19,7 +19,7 @@ const fallbackListings = [
     category: "flat",
     bedrooms: 3,
     area: "1,250 sq.ft",
-    images: ["/images/listings/property1.jpg"],
+    images: ["/logo/shesh%20property%20logo%20new.svg"],
   },
   {
     id: 2,
@@ -30,7 +30,7 @@ const fallbackListings = [
     category: "flat",
     bedrooms: 2,
     area: "950 sq.ft",
-    images: ["/images/listings/property2.jpg"],
+    images: ["/logo/shesh%20property%20logo%20new.svg"],
   },
   {
     id: 3,
@@ -41,7 +41,7 @@ const fallbackListings = [
     category: "house",
     bedrooms: 4,
     area: "3,500 sq.ft",
-    images: ["/images/listings/property3.jpg"],
+    images: ["/logo/shesh%20property%20logo%20new.svg"],
   },
   {
     id: 4,
@@ -52,7 +52,7 @@ const fallbackListings = [
     category: "commercial",
     bedrooms: null,
     area: "800 sq.ft",
-    images: ["/images/listings/property4.jpg"],
+    images: ["/logo/shesh%20property%20logo%20new.svg"],
   },
   {
     id: 5,
@@ -63,7 +63,7 @@ const fallbackListings = [
     category: "flat",
     bedrooms: 1,
     area: "550 sq.ft",
-    images: ["/images/listings/property5.jpg"],
+    images: ["/logo/shesh%20property%20logo%20new.svg"],
   },
 ];
 
@@ -87,7 +87,7 @@ const categoryFilters = [
 /* ============ IMAGE CAROUSEL ============ */
 function ImageCarousel({ images, title }) {
   const [current, setCurrent] = useState(0);
-  const fallbackImg = '/images/placeholder.png';
+  const fallbackImg = '/logo/shesh%20property%20logo%20new.svg';
   const slides = images && images.length > 0 ? images : [fallbackImg];
 
   const prev = (e) => {

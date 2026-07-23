@@ -187,7 +187,7 @@ export default function AboutPage() {
             <div className="w-28 h-28 bg-orange-100 dark:bg-orange-900/30 rounded-full mx-auto mb-4 flex items-center justify-center">
               <span className="text-4xl font-bold text-orange-500">SD</span>
             </div>
-            <h4 className="font-bold text-xl text-blue-900 dark:text-white">[Father&apos;s Name]</h4>
+            <h4 className="font-bold text-xl text-blue-900 dark:text-white">Soma Bhai Desai</h4>
             <p className="text-orange-500 font-medium text-sm mb-3">Founder</p>
             <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
               Decades of experience in Mumbai&apos;s property market.
@@ -195,6 +195,45 @@ export default function AboutPage() {
             </p>
           </div>
 
+        </div>
+      </div>
+
+      {/* Our History Section */}
+      <div className="max-w-5xl mx-auto mt-20 px-4">
+        <h3 className="text-2xl font-bold text-blue-900 dark:text-white text-center mb-8">
+          Our Story & Legacy
+        </h3>
+
+        <div className="bg-blue-50 dark:bg-slate-700 rounded-2xl p-8 md:p-12 text-gray-700 dark:text-gray-300 leading-relaxed space-y-6">
+          <p>
+            Our family’s connection with Malad goes back to the 1970s, when the very place where our office stands today was home to our family’s dairy and cattle business. Over the years, it became much more than a place of work—it became a place where people met, relationships grew, and my father became someone they could always turn to for honest guidance.
+          </p>
+          <p>
+            He believed that a home is more than four walls—it is the people around it that truly make it special. Whenever someone he knew was looking for a home, he would gladly help them find one nearby. He found genuine happiness in seeing good people become neighbours, believing that strong communities are built through meaningful relationships.
+          </p>
+          <p>
+            As the years passed, those conversations turned into recommendations, recommendations turned into referrals, and through the trust of the community, Shesh Property took shape.
+          </p>
+          <p>
+            The values that guided those early years continue to define who we are today—honest advice, genuine relationships, and always putting people before transactions.
+          </p>
+
+          <h4 className="text-xl font-bold text-blue-900 dark:text-white mt-8 mb-4">
+            Carrying the Legacy Forward
+          </h4>
+
+          <p>
+            Growing up, I saw firsthand that real estate is not just about properties—it’s about people and the trust they place in you.
+          </p>
+          <p>
+            After completing my MBA in Marketing, I spent nearly eight years building experience in sales, customer relationships, negotiation, and business development with leading multinational companies.
+          </p>
+          <p>
+            Joining the family business gave me the opportunity to carry that legacy forward. My focus has been to combine the values my father built with a more structured and market-informed approach, helping buyers, sellers, investors, and businesses make confident property decisions across Mumbai’s Western Suburbs.
+          </p>
+          <p className="font-semibold text-blue-900 dark:text-white mt-4">
+            Our philosophy remains simple: listen first, advise honestly, and build relationships that last long after the transaction is complete.
+          </p>
         </div>
       </div>
 

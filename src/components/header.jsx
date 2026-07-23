@@ -16,9 +16,11 @@ const Header = () => {
         
         {/* Logo */}
         <Link href="/">
-          <h1 className="font-bold text-xl sm:text-2xl hover:text-orange-500 transition-colors">
-            Shesh Property
-          </h1>
+          <img 
+            src="/logo/shesh%20property%20logo%20new.svg" 
+            alt="Shesh Property Logo" 
+            className="h-10 sm:h-12 w-auto cursor-pointer"
+          />
         </Link>
 
 
@@ -26,6 +28,9 @@ const Header = () => {
         <ul className="hidden sm:flex text-sm font-bold items-center">
           <li className="p-4 hover:text-orange-500 cursor-pointer">
             <Link href="/">Home</Link>
+          </li>
+          <li className="p-4 hover:text-orange-500 cursor-pointer">
+            <Link href="/about">About Us</Link>
           </li>
           <li className="p-4 hover:text-orange-500 cursor-pointer">
             <Link href="/listings">Listings</Link>
@@ -68,6 +73,9 @@ const Header = () => {
           <ul className="text-white space-y-2">
             <li onClick={handleNav} className="p-4 text-3xl hover:text-orange-500">
               <Link href="/">Home</Link>
+            </li>
+            <li onClick={handleNav} className="p-4 text-3xl hover:text-orange-500">
+              <Link href="/about">About Us</Link>
             </li>
             <li onClick={handleNav} className="p-4 text-3xl hover:text-orange-500">
               <Link href="/listings">Listings</Link>

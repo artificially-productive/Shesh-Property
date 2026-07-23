@@ -12,7 +12,7 @@ const Hero = () => {
   };
 
   return (
-    <section className="flex flex-col w-full h-screen">
+    <section className="relative flex flex-col w-full h-screen">
       <Image
         src={heroBg}
         alt="Modern home interior"

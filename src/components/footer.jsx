@@ -15,7 +15,7 @@ const Footer = () => {
           {/* Column 1: Logo & Social */}
           <div className="col-span-2 sm:col-span-1">
             <img 
-              src="/logo/shesh-logo.webp" 
+              src="/logo/shesh%20property%20logo%20new.svg" 
               alt="Shesh Properties Logo" 
               className="h-10 sm:h-12 w-auto mb-4"
             />
